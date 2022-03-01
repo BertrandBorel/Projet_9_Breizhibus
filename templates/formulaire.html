@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block titre %} 
+    Identifiez-vous
+{% endblock %} 
+
+{% block content %} 
+<div id="mapage">
+    <h1>Espace d'identification</h1>
+    
+    <!-- on insère le formulaire-->
+    <p>Veuillez entrer votre identifiant et votre mot de passe.</p>
+    
+    <!-- url_for de flask calcule l'url à partir de route-->
+    <form action="{{ url_for('autoriser') }}" method="post">
+        <label for="pseudo">Pseudo : </label>
+        <input type="text" placeholder="Entrer le nom d'utilisateur" name="username" required>
+        
+        <label for="mdp">Mot de passe : </label>
+        <input type="password" placeholder="Entrer le mot de passe" name="password" required>
+        
+        <button type = "submit"> Me connecter </button>
+
+    </form>   
+    
+    <div>
+        <a href="{{ url_for('accueil') }}">Accueil</a>
+    </div> 
+        
+    </div>
+{% endblock %} 
+
+

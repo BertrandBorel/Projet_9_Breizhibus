@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block titre %} 
+    Ajouter un bus
+{% endblock %} 
+
+{% block content %}
+
+    <h1>Ajouter un bus</h1>
+
+    <!-- on insère le formulaire-->
+    <p>Veuillez compléter les informations nécessaires.</p>
+    
+    <!-- url_for de flask calcule l'url à partir de route--> 
+    <form action="{{ url_for('add') }}" method="get">
+        <label for="numero">numero : </label>
+        <input type="text" name="numero" required>
+        
+        <label for="immatriculation">immatriculation   : </label>
+        <input type="text" name="immatriculation" required>
+
+        <label for="nombre_places">nombre de places   : </label>
+        <input type="int" name="nombre_place" required>
+
+        <label for="ligne">ligne : </label>
+        <input type="text" name="id_ligne" required>
+
+<!-- bouton pour valider le formulaire-->
+        <button type = "submit" value="Envoyer"> Ajouter un bus </button>
+
+    </form>   
+    
+    <div id="mapage">
+
+        <a href="{{ url_for('accueil') }}">Accueil</a>
+    </div> 
+{% endblock %}

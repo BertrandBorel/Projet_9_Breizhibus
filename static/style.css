@@ -1,0 +1,31 @@
+body{
+    background: #8e9fbe;
+}
+
+
+
+#mapage{
+    text-align: center;
+    width: 80%;
+    margin: auto;
+    background-color: #8e9fbe;
+    padding-bottom: 50px;
+}
+
+/* modifier le bouton de retour à l'accueil
+#bouton{
+
+}*/
+
+
+h1 {
+    border: 2px #080202 solid;
+    color: black;
+    text-align: center;
+    padding: 10px;
+    }
+
+#bouton_don{
+    border: 2px #c52121 solid;
+    text-align: center;
+    }

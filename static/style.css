@@ -12,6 +12,9 @@ body{
     padding-bottom: 50px;
 }
 
+block{ 
+    position: center;
+}
 /* modifier le bouton de retour à l'accueil
 #bouton{
 
@@ -28,4 +31,13 @@ h1 {
 #bouton_don{
     border: 2px #c52121 solid;
     text-align: center;
+    }
+
+table, tbody{
+    border-collapse: collapse;
+    }
+
+
+td, th /* Mettre une bordure sur les td ET les th */{
+    border: 1px solid black;
     }

@@ -1,0 +1,27 @@
+{%extends 'base.html'%}
+
+{% block titre %}
+formulaire identification
+{% endblock %}
+
+{% block content %}
+<div id="mapage">
+<h1>Espace d'identification</h1>
+<p>Veuillez entrer votre identifiant et votre mot de passe.</p>
+<div id="centrer">
+<form action="{{url_for('autoriser') }}" method="post">
+    <label for="pseudo">Identifiant : </label>
+    <input type="text"  name="pseudo" > <br>
+
+    <label for="mdp"> Mot de Passe : </label>
+    <input type="text" name="mdp"> <br>
+
+    <button type="submit"> Je m'identifie ! </button>
+</form>
+</div>
+<div id="mapage">
+
+    <a href="{{ url_for('index') }}">Accueil</a>
+</div> 
+</div>
+<!-- {% endblock %} -->

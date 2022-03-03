@@ -1,6 +1,6 @@
 # from crypt import methods
 from flask import Flask, render_template, request, url_for
-from connexion import Connexion
+from data import Connexion
 
 app = Flask(__name__)
 
@@ -9,10 +9,10 @@ def index():
     ligne = Connexion.lister_lignes()
     return render_template('index.html', a_afficher = ligne)
 
-@app.route('/client', methods = ['POST', 'GET'])
+@app.route('/afficher_lignes', methods = ['POST', 'GET'])
 def client():
     lignes = Connexion.lister_lignes()
-    return render_template('client.html', lignes=lignes)
+    return render_template('afficher_lignes.html', lignes=lignes)
 
 @app.route('/arret/<int:id_lignes>')
 def afficher_arrets(id_ligne):
@@ -22,7 +22,7 @@ def afficher_arrets(id_ligne):
 @app.route('/identification')
 def identifier():
     
-    return render_template("form_identifier.html")
+    return render_template("formulaire.html")
 
 
 @app.route('/autorisation', methods=['POST'])
@@ -76,9 +76,9 @@ def supprimer_bus():
     return render_template("supprimer_bus.html", id_bus=id_bus_input)
 
 
-@app.route ('/form_identifier')
+@app.route ('/formulaire')
 def formuler():
-    return render_template("form_identifier.html")
+    return render_template("formulaire.html")
 
 
 

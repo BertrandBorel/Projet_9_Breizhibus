@@ -1,113 +1,87 @@
-from flask import Flask, render_template, request
-from data import Connexion
+# from crypt import methods
+from flask import Flask, render_template, request, url_for
+from connexion import Connexion
 
-
-# on appelle le constructeur de flask pour notre appli
 app = Flask(__name__)
 
-
-# page d'accueil, le / appelle le nom de domaine
 @app.route('/')
-def accueil() :
-    return render_template('index.html', title = 'Breizhibus')
+def index():
+    ligne = Connexion.lister_lignes()
+    return render_template('index.html', a_afficher = ligne)
 
-
-# page de connexion
-@app.route('/connexion')
-def connexion():
-    return render_template('formulaire.html')
-
-# page pour visualiser les lignes
-@app.route('/lignes') #, methods = ['POST'])
-def voir_lignes():
+@app.route('/client', methods = ['POST', 'GET'])
+def client():
     lignes = Connexion.lister_lignes()
-    return render_template('lignes.html', post = lignes)
+    return render_template('client.html', lignes=lignes)
 
-# page pour visualiser les arrêtes
-@app.route('/arrets/<int:id_ligne>')
-def voir_arrets(id_ligne):
-    arrets = Connexion.lister_arrets(id_ligne)
-    return render_template('arrets.html', post = arrets)
-                            # arrets.html
+@app.route('/arret/<int:id_lignes>')
+def afficher_arrets(id_ligne):
+    arrets= Connexion.lister_arrets(id_ligne)
+    return render_template("arrets.html", a_afficher=arrets)
 
-
-
-
-@app.route('/connexion')
-def identifier(cls, pseudo, mdp): #cls?
-    connexion = False
-
-    Connexion.ouvrir_connexion()
-    requete = "SELECT identifiant, mdp from utilisateurs WHERE identifiant = %s AND mdp = %s"
-    # requete = "SELECT identifiant, mdp from utilisateurs WHERE identifiant = {pseudo} AND mdp = {mdp}"
-    cle = (pseudo, mdp)
-
-    Connexion.__cursor.execute(requete, cle)
-    if Connexion.__cursor.fetchone :
-        connexion = True
-
-    Connexion.fermer_connexion()
-    return render_template("formulaire.html")
-
-@app.route("/autoriser", methods=['POST'])
-def autoriser():
-    pseudo = request.values.get("username") # username est le nom inscrit dans le formulaire
-    mdp = request.values.get("password") # idem pour password
-    connexion = Connexion.identifier(pseudo, mdp)
-    return render_template("identifier.html", qui = pseudo, reponse = connexion) # exemple = vous êtes authentifiés
-
-# ajouter un bus (formulaire)
-@app.route("/autorisation/ajouter", methods=['GET', 'POST'])
-def ajouter_bus():
-    # 1 formulaire pour ajouter un bus
-    return render_template("ajouter_bus.html")
+@app.route('/identification')
+def identifier():
     
+    return render_template("form_identifier.html")
 
 
-#ajout d'un bus à la liste
-@app.route('/add', methods=['GET'])
-def add():
-    numero = request.values.get('numero')
-    immatriculation = request.values.get('immatriculation')
-    nombre_places=request.values.get('nombre_place')
-    ligne=request.values.get('id_ligne')
+@app.route('/autorisation', methods=['POST'])
+def autoriser():
+    pseudo_utilisateur = request.values.get("pseudo")
+    mdp_utilisateur = request.values.get("mdp")
+    oui = Connexion.identifier(pseudo_utilisateur, mdp_utilisateur)
 
-    Connexion.ajouter_bus(numero, immatriculation, nombre_places, ligne)
-    return render_template('add.html')
+    return render_template("identifier.html", qui = pseudo_utilisateur, reponse = oui)
+
+@app.route('/autorisation/ajouter', methods = ['GET', 'POST'])
+def ajouter_bus():
+    id_lignes_input = Connexion.select_lignes()
+
+    if request.method == 'POST':
+        immatriculation = request.values.get('immatriculation')
+        numero = request.values.get('numero')
+        nombre_places = request.values.get('nombre_places')
+        id_ligne = request.values.get('id_lignes')
+
+        print(immatriculation, numero, nombre_places, id_ligne)
+        Connexion.ajouter_bus(numero,immatriculation, nombre_places, id_ligne)
+    return render_template("ajout_bus.html", id_lignes=id_lignes_input)
 
 
-@app.route("/autorisation/modifier", methods=['GET'])
+@app.route('/autorisation/modifier', methods = ['GET', 'POST'])
 def modifier_bus():
-    numero = request.values.get('numero')
-    immatriculation = request.values.get('immatriculation')
-    nombre_places=request.values.get('nombre_place')
-    ligne=request.values.get('id_ligne')
-    bus=request.values.get("id_bus")
+    id_bus_input = Connexion.select_id_bus()
+    id_lignes_input = Connexion.select_lignes()
 
-    Connexion.modifier_bus(bus, numero, immatriculation, nombre_places, ligne)
-    return render_template("modifier_bus.html")
+    if request.method == 'POST':
+        immatriculation = request.values.get('immatriculation')
+        numero = request.values.get('numero')
+        nombre_places = request.values.get('nombre_places')
+        id_ligne = request.values.get('id_lignes')
+        id_bus = request.values.get('id_bus')
 
-#modification d'un bus à la liste
-@app.route('/modd', methods=['GET'])
-def modd():
-    numero = request.values.get('numero')
-    immatriculation = request.values.get('immatriculation')
-    nombre_places=request.values.get('nombre_place')
-    ligne=request.values.get('id_ligne')
-    bus=request.values.get("id_bus")
+        print(immatriculation, numero, nombre_places, id_ligne, id_bus)
+        Connexion.modifier_bus(id_bus, numero, immatriculation, nombre_places, id_ligne)
 
-    Connexion.modifier_bus(bus, numero, immatriculation, nombre_places, ligne)
-    return render_template("modifier_bus.html")
+    return render_template("modifier_bus.html", id_bus=id_bus_input, id_lignes=id_lignes_input)
 
-# Méthode pour supprimer un bus
-# @app.route("/autorisation/modifier", methods=['GET'])
+@app.route('/autorisation/supprimer', methods = ['GET', 'POST'])
+def supprimer_bus():
+
+    if request.method == 'POST':
+        id_bus = request.values.get('id_bus')
+        Connexion.supprimer_bus(id_bus)
+
+    id_bus_input = Connexion.select_id_bus()
+    return render_template("supprimer_bus.html", id_bus=id_bus_input)
+
+
+@app.route ('/form_identifier')
+def formuler():
+    return render_template("form_identifier.html")
 
 
 
-# lance automatiquement le serveur en mode debug
-# False = pour la production, désactive les messages
+    
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-    

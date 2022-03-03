@@ -20,11 +20,12 @@
     </select>
 
     <button type = "submit"> Ajouter un bus </button>
+    
 
 </form>
 
 <div id="mapage">
-
-    <a href="{{ url_for('index') }}">Accueil</a>
-</div> 
+    <form>
+        <input type = "button" value = "Page précédente"  onclick = "history.back()">
+        </form>
 {% endblock %}

@@ -8,17 +8,16 @@
     {% if reponse %}
         <h2>Bonjour {{ qui }}, vous êtes autorisés aux modifications suivantes : </h2>
 
-        <a href = "{{url_for('ajouter_bus')}}">ajouter un bus</a>
-        <a href = "{{url_for('modifier_bus')}}">modifier un bus</a>
-        <a href = "{{url_for('supprimer_bus')}}">supprimer un bus</a>
+        <button><a href = "{{url_for('ajouter_bus')}}">ajouter un bus</a></button>
+        <button><a href = "{{url_for('modifier_bus')}}">modifier un bus</a></button>
+        <button><a href = "{{url_for('supprimer_bus')}}">supprimer un bus</a></button>
         
 
     {% else %} 
         <h2> Vous n'avez pas les droits </h2>
     {% endif %}
     <div id="mapage">
-
-        <a href="{{ url_for('index') }}">Accueil</a>
-    </div> 
+        <button><a href="{{ url_for('index') }}" class="button">Accueil</a></button>
+         </div>
 {% endblock %}
 
